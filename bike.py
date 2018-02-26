@@ -92,8 +92,17 @@ def time_of_trip(datum, city):
     """
 
     # 请在此处写出代码
-
-    return (month, hour, day_of_week)
+    if city == 'NYC': # ('starttime', '1/1/2016 00:09:55'),
+        theDateTime = datum['starttime']
+        theFormat = '%m/%d/%Y %H:%M:%S'
+    elif city == 'Chicago': # ('starttime', '3/31/2016 23:30'),
+        theDateTime = datum['starttime']
+        theFormat = '%m/%d/%Y %H:%M'
+    elif city == 'Washington': # ('Start date', '3/31/2016 22:57'),
+        theDateTime = datum['Start date']
+        theFormat = '%m/%d/%Y %H:%M'
+    dt = datetime.strptime(theDateTime, theFormat)
+    return (dt.month, dt.hour, dt.strftime('%A'))
 
 # 测试代码是否奏效，若所有断言都没问题，则不应有输出出现。
 # 至于字典 `example_trips`
@@ -104,3 +113,32 @@ tests = {'NYC': (1, 0, 'Friday'),
 
 for city in tests:
     assert time_of_trip(example_trips[city], city) == tests[city]
+
+def type_of_user(datum, city):
+    """
+    将一个字典作为输入，该字典需包含一条骑行记录（数据）
+    及记录城市（城市）的信息，返回进行该骑行的系统用户类型。
+
+    记住，华盛顿特区的类名与芝加哥和纽约市的不同。
+    """
+
+    # 请在此处写出代码
+    if city == 'Washington':
+        if datum['Member Type'] == 'Registered':
+            user_type = 'Subscriber'
+        else:
+            user_type = 'Customer'
+    else:
+        user_type = datum['usertype']
+    return user_type
+
+# 测试代码是否奏效，若所有断言都没问题，则不应有输出出现。
+# 至于字典 `example_trips`
+# 则是在你输出每个数据源文件的第一条骑行数据时生成的。
+tests = {'NYC': 'Customer',
+         'Chicago': 'Subscriber',
+         'Washington': 'Subscriber'}
+
+for city in tests:
+    assert type_of_user(example_trips[city], city) == tests[city]
+print('Finished.')
