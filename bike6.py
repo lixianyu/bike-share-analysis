@@ -1,5 +1,5 @@
 import csv
-
+#得到duration的list以用于hist
 def get_duration_list(filename):
     with open(filename, 'r') as f_in:
         reader = csv.DictReader(f_in)
