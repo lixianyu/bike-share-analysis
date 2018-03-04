@@ -38,7 +38,7 @@ def quarter_counts(filename):
                 theQuarterDict['4'] += 1
         return theQuarterDict
 
-#得到会员骑行量与散客骑行量
+#按月得到会员骑行量与散客骑客量
 def month_counts_ratio(filename):
     with open(filename, 'r') as f_in:
         reader = csv.DictReader(f_in)
@@ -57,6 +57,43 @@ def month_counts_ratio(filename):
             elif row['user_type'] == 'Customer':
                 theMonthDict[row['month']]['Customer'] += 1
         return theMonthDict
+
+#按季度得到会员骑行量与散客骑客量之比
+def quarter_counts_ratio(filename):
+    with open(filename, 'r') as f_in:
+        reader = csv.DictReader(f_in)
+
+        theQuarterDict = {
+        '1':{'Subscriber':0, 'Customer':0}, '2':{'Subscriber':0, 'Customer':0},
+        '3':{'Subscriber':0, 'Customer':0}, '4':{'Subscriber':0, 'Customer':0}
+        }
+        for row in reader:
+            if row['month'] == '1' or row['month'] == '2' or row['month'] == '3':
+                if row['user_type'] == 'Subscriber':
+                    theQuarterDict['1']['Subscriber'] += 1
+                elif row['user_type'] == 'Customer':
+                    theQuarterDict['1']['Customer'] += 1
+            if row['month'] == '4' or row['month'] == '5' or row['month'] == '6':
+                if row['user_type'] == 'Subscriber':
+                    theQuarterDict['2']['Subscriber'] += 1
+                elif row['user_type'] == 'Customer':
+                    theQuarterDict['2']['Customer'] += 1
+            if row['month'] == '7' or row['month'] == '8' or row['month'] == '9':
+                if row['user_type'] == 'Subscriber':
+                    theQuarterDict['3']['Subscriber'] += 1
+                elif row['user_type'] == 'Customer':
+                    theQuarterDict['3']['Customer'] += 1
+            if row['month'] == '10' or row['month'] == '11' or row['month'] == '12':
+                if row['user_type'] == 'Subscriber':
+                    theQuarterDict['4']['Subscriber'] += 1
+                elif row['user_type'] == 'Customer':
+                    theQuarterDict['4']['Customer'] += 1
+
+        radio = {}
+        for key, sc in theQuarterDict.items():
+            radio[key] = sc['Subscriber'] / sc['Customer']
+        # pprint(radio)
+        return radio
 
 # Do some test.
 city_info = {'Washington': './data/Washington-2016-Summary_my.csv',
@@ -77,12 +114,18 @@ for city, filename in city_info.items():
     maxKey = max(quarter_dict, key = quarter_dict.get)
     print('{}季度骑客量最高'.format(maxKey))
 
-    aDict = month_counts_ratio(filename)
+    # aDict = month_counts_ratio(filename)
+    # pprint(aDict)
+    # radio = {}
+    # for key, sc in aDict.items():
+    #     radio[key] = sc['Subscriber'] / sc['Customer']
+    # pprint(radio)
+    # maxKey = max(radio, key = radio.get)
+    # print('{}月会员与散客的比率最高'.format(maxKey))
+
+    aDict = quarter_counts_ratio(filename)
     pprint(aDict)
-    radio = {}
-    for key, sc in aDict.items():
-        radio[key] = sc['Subscriber'] / sc['Customer']
-    pprint(radio)
-    maxKey = max(radio, key = radio.get)
-    print('{}月会员与散客的比率最高'.format(maxKey))
+    maxKey = max(aDict, key = aDict.get)
+    print('{}季度会员与散客的比率最高'.format(maxKey))
+
     print('\r\n')

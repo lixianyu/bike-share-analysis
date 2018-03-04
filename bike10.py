@@ -57,12 +57,14 @@ city_info = {'Washington': './data/Washington-2016-Summary_my.csv',
              'Chicago': './data/Chicago-2016-Summary_my.csv',
              'NYC': './data/NYC-2016-Summary_my.csv'}
 for city, filename in city_info.items():
-    #hourDict = hour_counts(filename)
-    #hourDict = hour_counts_Subscriber(filename)
+    # hourDict = hour_counts(filename)
+    # hourDict = hour_counts_Subscriber(filename)
     hourDict = hour_counts_Customer(filename)
-    print(city + ":\r\n")
+    print(city + ":")
     print(hourDict)
     maxKey = max(hourDict, key = hourDict.get)
     print('{}点的时候，系统使用最频繁'.format(maxKey))
     minKey = min(hourDict, key = hourDict.get)
     print('{}点的时候，系统使用最不频繁'.format(minKey))
+
+    print('\r\n')
